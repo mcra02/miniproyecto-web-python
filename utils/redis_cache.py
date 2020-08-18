@@ -3,12 +3,9 @@ import redis
 import json
 from datetime import datetime
 
-# HOST = os.getenv('REDIS_HOST')
-# PORT = os.getenv('REDIS_PORT')
-# PASSWORD = os.getenv('REDIS_PASSWORD')
-HOST = '172.21.0.2'
-PORT = 6379
-PASSWORD = 'admin'
+HOST = os.getenv('REDIS_HOST')
+PORT = os.getenv('REDIS_PORT')
+PASSWORD = os.getenv('REDIS_PASSWORD')
 
 master = redis.Redis(host=HOST,
                      port=PORT, password=PASSWORD)
