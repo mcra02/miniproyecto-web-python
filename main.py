@@ -12,11 +12,11 @@ from utils.errors import AppError
 from falcon_marshmallow import Marshmallow
 
 
-# cors = CORS(
-#     allow_all_origins=True,
-#     allow_all_headers=True,
-#     allow_all_methods=True,
-# )
+cors = CORS(
+    allow_all_origins=True,
+    allow_all_headers=True,
+    allow_all_methods=True,
+)
 
 
 def create_app():
