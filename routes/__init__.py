@@ -1,7 +1,9 @@
 from modules.auth.routes import routes as auth_route
+from modules.accounts.routes import routes as account_route
 
 api_routes = [
-    auth_route
+    auth_route,
+    account_route
 ]
 
 
