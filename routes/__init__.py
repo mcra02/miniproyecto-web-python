@@ -42,7 +42,7 @@ def register_routes(routes, app, prefix=None):
                     'endpoint': str(f'/{route[0]}')
                 }
                 endpoints.append(url)
-                app.add_route(f'/{route[0]}')
+                app.add_route(f'/{route[0]}', route[1])
     master.delete(SCHEMA)
     for x in endpoints:
         create(SCHEMA, x)

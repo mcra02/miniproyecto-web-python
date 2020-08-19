@@ -7,3 +7,5 @@ local_settings.*
 
 *.lock
 *.db
+
+.env

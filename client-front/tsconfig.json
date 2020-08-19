@@ -1,0 +1,23 @@
+{
+  // "extends": "@quasar/app/tsconfig-preset",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "module": "commonjs",
+    "target": "es6",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["./src/**/*"],
+  "exclude": [
+    "**/build/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "./src-pwa/**",
+    "./src-cordova/**",
+    "./node-modules/**"
+  ]
+}

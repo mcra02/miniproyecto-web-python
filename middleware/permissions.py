@@ -10,7 +10,7 @@ SCHEMA = os.getenv('REDIS_USERS')
 
 
 def is_user_auth(funcion_a):
-    def funcion_HTTP(self, req, res):
+    def funcion_HTTP(self, req, res, **kwargs):
         token = req.headers.get('AUTHORIZATION', None)
 
         try:

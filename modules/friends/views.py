@@ -12,6 +12,8 @@ from utils.convert_case import (
     to_snake_case
 )
 
+from middleware.permissions import is_user_auth
+
 from utils.redis_cache import (
     create,
     delete,
@@ -33,6 +35,7 @@ URL_PAGINATION = os.getenv('URL_PAGINATION')
 
 
 class FriendGetIDView(BaseResource):
+    @is_user_auth
     def on_get(self, req, res, id):
         try:
             data = findOne(SCHEMA, id=id)
@@ -43,6 +46,7 @@ class FriendGetIDView(BaseResource):
 
 
 class FriendGetView(BaseResource):
+    @is_user_auth
     @falcon.before(OffsetPaginationHook(
         default_limit=10,
         max_limit=10,
@@ -73,6 +77,7 @@ class FriendGetView(BaseResource):
 class FriendPostView(BaseResource):
     schema = FriendPostSerializer()
 
+    @is_user_auth
     def on_post(self, req, res):
         try:
             req = to_snake_case(req.context['json'])
@@ -99,6 +104,7 @@ class FriendPostView(BaseResource):
 
 
 class FriendDeleteView(BaseResource):
+    @is_user_auth
     def on_delete(self, req, res, id):
         try:
             data = delete(SCHEMA, id=id)
@@ -111,6 +117,7 @@ class FriendDeleteView(BaseResource):
 class FriendDelPostView(BaseResource):
     schema = FriendDelPostSerializer()
 
+    @is_user_auth
     def on_post(self, req, res):
         try:
             id = req['id']
@@ -132,6 +139,7 @@ class FriendView(FriendPostView,
 
 
 class FriendNestedGetView(BaseResource):
+    @is_user_auth
     @falcon.before(OffsetPaginationHook(
         default_limit=10,
         max_limit=10,
@@ -160,6 +168,7 @@ class FriendNestedGetView(BaseResource):
 
 
 class FriendsRelationView(BaseResource):
+    @is_user_auth
     @falcon.before(OffsetPaginationHook(
         default_limit=10,
         max_limit=10,

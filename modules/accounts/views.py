@@ -20,6 +20,8 @@ from utils.redis_cache import (
     findOne,
 )
 
+from middleware.permissions import is_user_auth
+
 from modules.accounts.serializer import (
     AccountsPostSerializer,
     AccountPutSerializer
@@ -31,6 +33,7 @@ URL_PAGINATION = os.getenv('URL_PAGINATION')
 
 
 class AccountsGetIDView(BaseResource):
+    @is_user_auth
     def on_get(self, req, res, id):
         try:
             data = findOne(SCHEMA, id=id)
@@ -43,6 +46,7 @@ class AccountsGetIDView(BaseResource):
 
 
 class AccountGetView(BaseResource):
+    @is_user_auth
     @falcon.before(OffsetPaginationHook(
         default_limit=10,
         max_limit=10,
@@ -76,6 +80,7 @@ class AccountGetView(BaseResource):
 class AccountPostView(BaseResource):
     schema = AccountsPostSerializer()
 
+    @is_user_auth
     def on_post(self, req, res):
         req = to_snake_case(req.context['json'])
         try:
@@ -115,6 +120,7 @@ class AccountPutView(BaseResource):
 
     schema = AccountPutSerializer()
 
+    @is_user_auth
     def on_put(self, req, res, id):
         req = to_snake_case(req.context['json'])
         try:
@@ -145,6 +151,7 @@ class AccountPutView(BaseResource):
 
 
 class AccountDeleteView(BaseResource):
+    @is_user_auth
     def on_delete(self, req, res, id):
         try:
             data = delete(SCHEMA, id=id)
