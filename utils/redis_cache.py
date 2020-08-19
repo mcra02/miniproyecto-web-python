@@ -12,47 +12,68 @@ master = redis.Redis(host=HOST,
 
 
 def find(schema):
-    data = master.lrange(schema, 0, -1)
-    return list(json.loads(x) for x in data)
+    try:
+        data = master.lrange(schema, 0, -1)
+        return list(json.loads(x) for x in data)
+    except Exception as e:
+        raise Exception(e)
 
 
 def findOne(schema, **kwargs):
-    all = find(schema=schema)
-    data = {}
-    for x in all:
-        for key in kwargs.keys():
-            data = x if(x[key] == kwargs[key]) else data
-    return data
+    try:
+        all = find(schema=schema)
+        data = {}
+        for x in all:
+            for key in kwargs.keys():
+                data = x if(x[key] == kwargs[key]) else data
+        if (len(data.keys()) > 0):
+            return data
+        else:
+            raise Exception('No de encontro ningun registro')
+    except Exception as e:
+        raise Exception(e)
 
 
 def findIndex(schema, **kwargs):
-    all = find(schema=schema)
-    one = findOne(schema, **kwargs)
-    index = all.index(one)
-    return index
+    try:
+        all = find(schema=schema)
+        one = findOne(schema, **kwargs)
+        index = all.index(one)
+        return index
+    except Exception as e:
+        raise Exception(e)
 
 
 def create(schema, object_payload):
-    object_payload['created'] = str(datetime.now())
-    object_payload['updated'] = ''
-    new_payload = json.dumps(object_payload)
-    master.lpush(schema, new_payload)
-    return object_payload
+    try:
+        object_payload['created'] = str(datetime.now())
+        object_payload['updated'] = ''
+        new_payload = json.dumps(object_payload)
+        master.lpush(schema, new_payload)
+        return object_payload
+    except Exception as e:
+        raise Exception(e)
 
 
 def update(schema, data, **kwargs):
-    obj = findOne(schema, **kwargs)
-    index = findIndex(schema, **kwargs)
-    obj.update(data)
-    obj['updated'] = str(datetime.now())
-    master.lset(schema, index, json.dumps(obj))
-    return obj
+    try:
+        obj = findOne(schema, **kwargs)
+        index = findIndex(schema, **kwargs)
+        obj.update(data)
+        obj['updated'] = str(datetime.now())
+        master.lset(schema, index, json.dumps(obj))
+        return obj
+    except Exception as e:
+        raise Exception(e)
 
 
 def delete(schema, **kwargs):
-    obj = findOne(schema, **kwargs)
-    master.lrem(schema, 1, json.dumps(obj))
-    return obj
+    try:
+        obj = findOne(schema, **kwargs)
+        master.lrem(schema, 1, json.dumps(obj))
+        return obj
+    except Exception as e:
+        raise Exception(e)
 
 
 # user = {
