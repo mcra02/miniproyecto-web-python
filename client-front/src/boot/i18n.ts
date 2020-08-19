@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { boot } from 'quasar/wrappers'
 import messages from 'src/i18n'
 import Vue from 'vue'

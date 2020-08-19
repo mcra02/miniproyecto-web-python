@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Module } from 'vuex'
 import { StateInterface } from '../index'
 import state, { ExampleStateInterface } from './state'

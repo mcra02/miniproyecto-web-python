@@ -190,9 +190,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-
+/* eslint-disable */
 import { defineComponent, onMounted, ref } from '@vue/composition-api'
 import axios from 'axios'
+
+let root = null
 
 export default defineComponent({
   setup (_, { root }) {
@@ -256,11 +258,13 @@ export default defineComponent({
         }
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         await axios.post(urlc.value, req, { headers: { Authorization: `Bearer ${token}` } })
+        // @ts-ignore
         root.$q.notify({
           type: 'positive',
           message: 'Realizado correctameente'
         })
       } catch (error) {
+        // @ts-ignore
         root.$q.notify({
           type: 'negative',
           message: 'Ocurrio un error al realizar la operacion'
@@ -281,12 +285,14 @@ export default defineComponent({
         await axios.delete(nurl, { headers: { Authorization: `Bearer ${token}` } })
         const index = data.value.persons.findIndex(d => d.id === data.value.accountSel)
         data.value.persons.splice(index, 1)
+        // @ts-ignore
         root.$q.notify({
           type: 'positive',
           message: 'Realizado correctameente'
         })
       } catch (error) {
         console.log(error)
+        // @ts-ignore
         root.$q.notify({
           type: 'negative',
           message: 'Ocurrio un error al realizar la operacion'

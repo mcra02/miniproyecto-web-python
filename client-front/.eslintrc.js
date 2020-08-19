@@ -42,9 +42,9 @@ module.exports = {
     // 'plugin:vue/strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
     // 'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
 
-    "plugin:vue/recommended",
-    "standard",
-    "@vue/typescript/recommended"
+    "plugin:vue/essential",
+    "standard"
+    // "@vue/typescript/recommended"
   ],
 
   plugins: [
@@ -83,10 +83,10 @@ module.exports = {
     "import/no-extraneous-dependencies": "off",
     "prefer-promise-reject-errors": "off",
 
-    // vue
-    "vue/singleline-html-element-content-newline": "off",
-    "vue/multiline-html-element-content-newline": "off",
-    "vue/component-name-in-template-casing": ["error", "kebab-case"],
+    // // vue
+    // "vue/singleline-html-element-content-newline": "off",
+    // "vue/multiline-html-element-content-newline": "off",
+    // "vue/component-name-in-template-casing": ["error", "kebab-case"],
 
     // TypeScript
     quotes: ["warn", "single", { avoidEscape: true }],

@@ -64,6 +64,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { defineComponent, ref } from '@vue/composition-api'
 import axios from 'axios'
 
@@ -83,12 +85,14 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const apikey = res.data.data.apikey
         window.localStorage.setItem('apikey', apikey)
+        // @ts-ignore
         root.$q.notify({
           type: 'positive',
           message: 'Realizado correctameente'
         })
         root.$router.push({ name: 'home' })
       } catch (error) {
+        // @ts-ignore
         root.$q.notify({
           type: 'negative',
           message: 'Ocurrio un error al realizar la operacion'
