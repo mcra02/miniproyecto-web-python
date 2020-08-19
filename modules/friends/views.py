@@ -5,6 +5,8 @@ import uuid
 
 from base.api import BaseResource
 
+from falcon_pagination.offset_pagination_hook import OffsetPaginationHook
+
 from utils.convert_case import (
     to_camel_case,
     to_snake_case
@@ -27,6 +29,7 @@ from modules.friends.seralizer import (
 
 SCHEMA = os.getenv('REDIS_FRIENDS')
 SCHEMA_ACCOUNT = os.getenv('REDIS_ACCOUNTS')
+URL_PAGINATION = os.getenv('URL_PAGINATION')
 
 
 class FriendGetIDView(BaseResource):
@@ -40,10 +43,27 @@ class FriendGetIDView(BaseResource):
 
 
 class FriendGetView(BaseResource):
+    @falcon.before(OffsetPaginationHook(
+        default_limit=10,
+        max_limit=10,
+        offset_key='page'
+    ))
     def on_get(self, req, res):
+        limit = req.context['pagination']['limit']
+        page = req.context['pagination']['offset']
+        if(page == 0):
+            page += 1
+        next = URL_PAGINATION + req.path + '?limit=' + \
+            '10' + '&page=' + \
+            str(page+1)
+        pagination = {
+            'page': page,
+            'count': limit,
+            'next': next
+        }
         try:
-            data = find(SCHEMA)
-            self.on_success(res, to_camel_case(data))
+            data = find(SCHEMA, page, limit)
+            self.on_success(res, to_camel_case(data), pagination)
         except Exception as e:
             print(e)
             self.on_error(
@@ -112,11 +132,66 @@ class FriendView(FriendPostView,
 
 
 class FriendNestedGetView(BaseResource):
+    @falcon.before(OffsetPaginationHook(
+        default_limit=10,
+        max_limit=10,
+        offset_key='page'
+    ))
     def on_get(self, req, res, account):
+        limit = req.context['pagination']['limit']
+        page = req.context['pagination']['offset']
+        if(page == 0):
+            page += 1
+        next = URL_PAGINATION + req.path + '?limit=' + \
+            '10' + '&page=' + \
+            str(page+1)
+        pagination = {
+            'page': page,
+            'count': limit,
+            'next': next
+        }
         try:
-            data = findCollection(SCHEMA, starting_account_id=account)
-            self.on_success(res, to_camel_case(data))
+            data = findCollection(SCHEMA, page, limit,
+                                  starting_account_id=account)
+            self.on_success(res, to_camel_case(data), pagination)
         except Exception as e:
+            self.on_error(
+                res, error={'code': 500, 'message': 'El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.', 'status': falcon.HTTP_500})
+
+
+class FriendsRelationView(BaseResource):
+    @falcon.before(OffsetPaginationHook(
+        default_limit=10,
+        max_limit=10,
+        offset_key='page'
+    ))
+    def on_get(self, req, res, account, friend):
+        limit = req.context['pagination']['limit']
+        page = req.context['pagination']['offset']
+        if(page == 0):
+            page += 1
+        next = URL_PAGINATION + req.path + '?limit=' + \
+            '10' + '&page=' + \
+            str(page+1)
+        pagination = {
+            'page': page,
+            'count': limit,
+            'next': next
+        }
+        try:
+            array = []
+            account_one = findCollection(SCHEMA, starting_account_id=account)
+            account_two = findCollection(SCHEMA, starting_account_id=friend)
+            for x in account_one:
+                for y in account_two:
+                    if(x['ending_account_id'] == y['ending_account_id']):
+                        array.append(y)
+            start = (page * 10)-10
+            end = start + limit
+            data = array[start:end]
+            self.on_success(res, to_camel_case(data), pagination)
+        except Exception as e:
+            print(e)
             self.on_error(
                 res, error={'code': 500, 'message': 'El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.', 'status': falcon.HTTP_500})
 

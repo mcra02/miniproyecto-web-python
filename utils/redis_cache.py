@@ -11,15 +11,23 @@ master = redis.Redis(host=HOST,
                      port=PORT, password=PASSWORD)
 
 
-def find(schema):
+def find(schema, page=0, limit=0):
+    start = (page * 10)-10
+    end = start + limit
     try:
         data = master.lrange(schema, 0, -1)
-        return list(json.loads(x) for x in data)
+        array = list(json.loads(x) for x in data)
+        if(page == 0 and limit == 0):
+            return array
+        else:
+            return array[start:end]
     except Exception as e:
         raise Exception(e)
 
 
-def findCollection(schema, **kwargs):
+def findCollection(schema, page=0, limit=0, **kwargs):
+    start = (page * 10)-10
+    end = start + limit
     try:
         alldata = find(schema)
         data = []
@@ -31,7 +39,10 @@ def findCollection(schema, **kwargs):
                 else:
                     status = False
             data.append(x) if(status == True) else data
-        return data
+        if(page == 0 and limit == 0):
+            return data
+        else:
+            return data[start:end]
     except Exception as e:
         raise Exception(e)
 

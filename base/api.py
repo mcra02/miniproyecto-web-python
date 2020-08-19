@@ -33,7 +33,7 @@ class BaseResource(object):
         obj["meta"] = meta
         res.body = self.to_json(obj)
 
-    def on_success(self, res, data=None):
+    def on_success(self, res, data=None, pagination={}):
         res.status = falcon.HTTP_200
         meta = OrderedDict()
         meta["code"] = 200
@@ -42,6 +42,7 @@ class BaseResource(object):
         obj = OrderedDict()
         obj["meta"] = meta
         obj["data"] = data
+        obj["pagination"] = pagination
         res.body = self.to_json(obj)
 
     def on_get(self, req, res):
