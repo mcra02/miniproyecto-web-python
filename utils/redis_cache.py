@@ -19,13 +19,35 @@ def find(schema):
         raise Exception(e)
 
 
+def findCollection(schema, **kwargs):
+    try:
+        alldata = find(schema)
+        data = []
+        for x in alldata:
+            status = False
+            for key in kwargs:
+                if(x[key] == kwargs[key]):
+                    status = True
+                else:
+                    status = False
+            data.append(x) if(status == True) else data
+        return data
+    except Exception as e:
+        raise Exception(e)
+
+
 def findOne(schema, **kwargs):
     try:
         all = find(schema=schema)
         data = {}
         for x in all:
+            status = False
             for key in kwargs.keys():
-                data = x if(x[key] == kwargs[key]) else data
+                if(x[key] == kwargs[key]):
+                    status = True
+                else:
+                    status = False
+            data = x if(status == True) else data
         if (len(data.keys()) > 0):
             return data
         else:

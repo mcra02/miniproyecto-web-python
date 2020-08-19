@@ -44,22 +44,35 @@ class AuthSignUpPostView(BaseResource):
 
     def on_post(self, req, res):
         req = to_snake_case(req.context['json'])
+        req['permissions'] = []
         if(req['password'] != req['password_confirmation']):
             raise PasswordNotMatch(
                 description='Password and passwordConfirmation don\'t match!')
         del req['password_confirmation']
-        user_exists = findOne(SCHEMA, username=req['username'])
-        if(len(user_exists.keys()) > 0):
-            raise UsernameNotAvailable(description='Username is not available')
-        req['password'] = b_encode(req['password'])
-        user = create(SCHEMA, req)
-        del user['password']
-        token = jwt_encode(user)
-        data = {
-            'apikey': token,
-            'user': user
-        }
-        self.on_success(res, to_camel_case(data))
+        username_length = 0
+        try:
+            user_exists = findOne(SCHEMA, username=req['username'])
+            username_length = len(user_exists['username'])
+            if(username_length > 0):
+                raise UsernameNotAvailable(
+                    description='Username is not available')
+        except Exception as e:
+            if(username_length > 0):
+                raise UsernameNotAvailable(
+                    description='Username is not available')
+            try:
+                req['password'] = b_encode(req['password'])
+                user = create(SCHEMA, req)
+                del user['password']
+                token = jwt_encode(user)
+                data = {
+                    'apikey': token,
+                    'user': user
+                }
+                self.on_success(res, to_camel_case(data))
+            except Exception as e:
+                self.on_error(
+                    res, error={'code': 500, 'message': 'El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.', 'status': falcon.HTTP_500})
 
 
 class AuthSignInPostView(BaseResource):
@@ -68,30 +81,39 @@ class AuthSignInPostView(BaseResource):
 
     def on_post(self, req, res):
         req = to_snake_case(req.context['json'])
-        user = findOne(SCHEMA, username=req['username'])
-        if(len(user.keys()) == 0):
+        try:
+            user = findOne(SCHEMA, username=req['username'])
+        except Exception as e:
             raise UserNotExistsError(
                 description='User or password is not available')
         if(b_compare(req['password'], user['password']) is False):
             raise UserNotExistsError(
                 description='User or password is not available')
-        del user['password']
-        token = jwt_encode(user)
-        data = {
-            'apikey': token,
-            'user': user
-        }
-        self.on_success(res, to_camel_case(data))
+        try:
+            del user['password']
+            token = jwt_encode(user)
+            data = {
+                'apikey': token,
+                'user': user
+            }
+            self.on_success(res, to_camel_case(data))
+        except Exception as e:
+            self.on_error(
+                res, error={'code': 500, 'message': 'El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.', 'status': falcon.HTTP_500})
 
 
 class AuthMeGetView(BaseResource):
     @is_user_auth
     def on_get(self, req, res):
-        token = req.headers.get('AUTHORIZATION', None)
-        encode = token.split(' ')
-        userpayload = jwt_decode(token)
-        data = {
-            'apikey': encode[1],
-            'user': userpayload
-        }
-        self.on_success(res, to_camel_case(data))
+        try:
+            token = req.headers.get('AUTHORIZATION', None)
+            encode = token.split(' ')
+            userpayload = jwt_decode(token)
+            data = {
+                'apikey': encode[1],
+                'user': userpayload
+            }
+            self.on_success(res, to_camel_case(data))
+        except Exception as e:
+            self.on_error(
+                res, error={'code': 500, 'message': 'El servidor encontró una condición inesperada que le impidió cumplir con la solicitud.', 'status': falcon.HTTP_500})

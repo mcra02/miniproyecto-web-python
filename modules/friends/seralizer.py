@@ -5,9 +5,8 @@ class FriendPostSerializer(Schema):
     class Meta:
         strict = True
 
-    id = fields.Integer()
-    starting_account_id = fields.Integer(required=True)
-    ending_account_id = fields.Integer(required=True)
+    startingAccountId = fields.String(required=True)
+    endingAccountId = fields.String(required=True)
 
 
 class FriendPutSerializer(FriendPostSerializer):

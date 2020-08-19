@@ -18,6 +18,7 @@ def clear_cache():
     try:
         master.delete(os.getenv('REDIS_USERS'))
         master.delete(os.getenv('REDIS_ACCOUNTS'))
+        master.delete(os.getenv('REDIS_FRIENDS'))
         print('Cache limpiado correctamente')
     except Exception as e:
         raise Exception('Error al limpiar la cache')
