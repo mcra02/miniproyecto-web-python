@@ -21,7 +21,8 @@ from utils.redis_cache import (
 
 from modules.friends.seralizer import (
     FriendPostSerializer,
-    FriendPutSerializer
+    FriendPutSerializer,
+    FriendDelPostSerializer
 )
 
 SCHEMA = os.getenv('REDIS_FRIENDS')
@@ -80,6 +81,19 @@ class FriendPostView(BaseResource):
 class FriendDeleteView(BaseResource):
     def on_delete(self, req, res, id):
         try:
+            data = delete(SCHEMA, id=id)
+            self.on_success(res, to_camel_case(data))
+        except Exception as e:
+            self.on_error(
+                res, error={'code': 404, 'message': 'No se encontro ningun registro!', 'status': falcon.HTTP_400})
+
+
+class FriendDelPostView(BaseResource):
+    schema = FriendDelPostSerializer()
+
+    def on_post(self, req, res):
+        try:
+            id = req['id']
             data = delete(SCHEMA, id=id)
             self.on_success(res, to_camel_case(data))
         except Exception as e:

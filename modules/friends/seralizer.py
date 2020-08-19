@@ -12,3 +12,7 @@ class FriendPostSerializer(Schema):
 class FriendPutSerializer(FriendPostSerializer):
     starting_account_id = fields.Integer()
     ending_account_id = fields.Integer()
+
+
+class FriendDelPostSerializer(Schema):
+    id = fields.String(required=True)
