@@ -23,7 +23,7 @@ def create_app():
     app = falcon.API(middleware=middlewares)
     app.req_options.auto_parse_form_urlencoded = True
     app.add_error_handler(AppError, AppError.handle)
-    register_routes(api_routes, app, prefix='api')
+    register_routes(api_routes, app, prefix='api/v1.0')
 
     return app
 

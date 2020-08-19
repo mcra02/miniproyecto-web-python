@@ -68,6 +68,7 @@ class AccountGetView(BaseResource):
                     'URL_WEB') + x['friend_collection_url']
             self.on_success(res, to_camel_case(data), pagination)
         except Exception as e:
+            print(e)
             self.on_error(
                 res, error={'code': 404, 'message': 'No se encontro ningun registro!', 'status': falcon.HTTP_400})
 

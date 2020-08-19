@@ -108,7 +108,6 @@ def delete(schema, **kwargs):
     except Exception as e:
         raise Exception(e)
 
-
 # user = {
 #     'name': 'juan',
 #     'age': '50'
