@@ -109,7 +109,7 @@ import axios from 'axios'
 
 export default defineComponent({
   setup () {
-    const urlc = ref('http://127.0.0.1:8000/api/v1.0/stats')
+    const urlc = ref('https://yarems.com/api/v1.0/stats')
     const data = ref({
       urls: [
         {

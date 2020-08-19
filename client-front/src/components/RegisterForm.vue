@@ -75,7 +75,7 @@ export default defineComponent({
       passwordConfirmation: ''
     })
 
-    const urlc = ref('http://127.0.0.1:8000/api/v1.0/auth/signup')
+    const urlc = ref('https://yarems.com/api/v1.0/auth/signup')
 
     async function onSubmit () {
       try {

@@ -215,7 +215,7 @@ export default defineComponent({
       accountSel: ''
     })
 
-    const urlc = ref('http://127.0.0.1:8000/api/v1.0/accounts')
+    const urlc = ref('https://yarems.com/api/v1.0/accounts')
 
     async function nextUrl () {
       await getPersons(data.value.next)
@@ -228,7 +228,7 @@ export default defineComponent({
     async function getPersons (url:string) {
       const token = window.localStorage.getItem('apikey')
       try {
-        // const res = await axios.get('http://127.0.0.1:8000/api/v1.0/accounts')
+        // const res = await axios.get('https://yarems.com/api/v1.0/accounts')
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         const res = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
         data.value.persons = res.data.data

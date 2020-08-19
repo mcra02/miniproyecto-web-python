@@ -83,7 +83,7 @@ export default defineComponent({
     const leftDrawerOpen = ref(false)
     const essentialLinks = ref(linksData)
 
-    const urlc = ref('http://127.0.0.1:8000/api/v1.0/auth/me')
+    const urlc = ref('https://yarems.com/api/v1.0/auth/me')
 
     async function isAuth () {
       const token = window.localStorage.getItem('apikey')
